@@ -1,20 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import Feed from "./Feed/Feed";
-import Header from "./Header/Header";
-import Sidebar from "./Sidebar/Sidebar";
-import Widgets from "./Widgets/Widgets";
+
+import { useSelector } from "react-redux";
+
+import { BrowserRouter as Router } from "react-router-dom";
+import Routes from "./routes";
+
+import Header from "./Components/Header/Header";
+import AdminRoutes from "./admin/admin_routes";
+import Cookies from "js-cookie";
 
 function App() {
+	// useEffect(() => {
+	// 	if (Cookies.get("access_token") !== "") {
+	// 		console.log("jwt cookie is present");
+	// 		const user = JSON.parse(Cookies.get("user"));
+	// 		dispatch(setJwt(Cookies.get("jwt")));
+	// 		if (user.newUser === 1) {
+	// 			dispatch(setNewUser(user));
+	// 		} else {
+	// 			dispatch(setLoggedUser(user));
+	// 		}
+	// 	} else {
+	// 		console.log("jwt cookie is not present");
+	// 	}
+	// }, [dispatch]);
 	return (
 		<div className='app'>
-			<Header />
-			<div className='app__body'>
-				<Sidebar />
-
-				<Feed />
-				<Widgets />
-			</div>
+			<Router>
+				<AdminRoutes />
+				<Header />
+				<Routes />
+			</Router>
 		</div>
 	);
 }
