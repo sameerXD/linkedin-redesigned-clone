@@ -3,11 +3,15 @@ import axios from "axios";
 import React from "react";
 import { getApi } from "../../utils/apis";
 import "./InputOption.css";
+
+const fs = require('fs');
+
 function InputOption({ Icon, color, title, input, postTags }) {
 	const axiosConfig = {
 		withCredentials: true,
 	};
-	const [upload, setUpload] = React.useState(new Image());
+	
+	const [upload, setUpload] = React.useState(null);
 	const uploadRequest = async (e) => {
 		console.log("in");
 		if (upload !== "") {
@@ -28,25 +32,54 @@ function InputOption({ Icon, color, title, input, postTags }) {
 				});
 		}
 	};
+
+// 	async function imageUpload(event) {
+// 		const formData = new FormData();
+		
+// let file = event.files[0];
+
+// const res = await axios.post(getApi("api/user/posts/imageUpload"),{'image':file.value}, {
+// 	withCredentials:true,
+// headers: {
+// 'Content-Type': file.type,
+// // 'Content-Length': file.size
+// }
+// });
+// // reader.onload = async () => {
+// //      formData.append('image', reader.result);
+// // 	 console.log(reader.result);
+// // 	 const res = await axios.post(getApi("api/user/posts/imageUpload"),file, {
+// // 		 withCredentials:true,
+// //   headers: {
+// // 	'Content-Type': file.type,
+// // 	// 'Content-Length': file.size
+// //   }
+// // });
+// //   };
+// 		// console.log(new URL(path).pathname.split('\\'));
+		
+// 	}
+
 	const sendPost = (e) => {
 		document.getElementById("image__form").onSubmit = uploadRequest;
 
-		// axios
-		// 	.post(
-		// 		getApi("api/user/posts"),
-		// 		{
-		// 			message: input,
-		// 			tags: postTags,
-		// 		},
-		// 		axiosConfig
-		// 	)
-		// 	.then((res) => {
-		// 		console.log(res);
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err);
-		// 	});
+		axios
+			.post(
+				getApi("api/user/posts"),
+				{
+					message: input,
+					tags: postTags,
+				},
+				axiosConfig
+			)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
+
 
 	return (
 		<div className={title === "Send" ? "inputOptionSend" : "inputOption"}>
@@ -59,20 +92,20 @@ function InputOption({ Icon, color, title, input, postTags }) {
 			) : (
 				<div className=''>
 					<form
-						action='https://linkedin-redesigned-server.herokuapp.com/api/user/posts/imageUpload'
+						action='http://localhost:3001/api/user/posts/imageUpload'
 						id='image__form'
 						name='image__form'
 						enctype='multipart/form-data'
+						method="post"
+						// onSubmit={afterSubmission}
 					>
 						<input
 							type='file'
 							id='actual-btn'
 							name='image'
 							accept={title === "Video" ? ".mp4, .mov" : ".jpg, .jpeg, .png"}
-							// onChange={(e) => {
-							// 	console.log(e.target.value);
-							// 	// setUpload(e.target.value);
-							// 	// uploadRequest();
+							// onChange={(e)=>{
+							// 	imageUpload(e.target)
 							// }}
 							multiple
 						/>
@@ -87,10 +120,7 @@ function InputOption({ Icon, color, title, input, postTags }) {
 							type='submit'
 							variant='outlined'
 							color='primary'
-							onClick={(e) => {
-								// e.preventDefault();
-								// uploadRequest();
-							}}
+						
 						>
 							Upload
 						</Button>
